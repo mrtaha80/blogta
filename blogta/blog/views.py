@@ -6,6 +6,9 @@ from .forms import ArticleForm, CommentForm
 from .models import Article, Comment
 
 
+from django.core.mail import send_mail
+from django.contrib.auth.models import User
+
 @permission_required('add_article')
 def add_article(request):
     if request.method == 'POST':
@@ -13,10 +16,22 @@ def add_article(request):
         if form.is_valid():
             form.instance.author = request.user
             form.save()
+
+            # Get all users
+            users = User.objects.all()
+
+            # Send email to each user
+            for user in users:
+                subject = 'New Article'
+                message = f'A new article titled "{form.cleaned_data["title"]}" has been submitted by {request.user.username}.'
+                from_email = 'tahaislion@example.com'
+                recipient_list = [user.email]
+                send_mail(subject, message, from_email, recipient_list)
+
             return redirect('articles')
     else:
         form = ArticleForm()
-    
+
     context = {
         'form': form
     }
