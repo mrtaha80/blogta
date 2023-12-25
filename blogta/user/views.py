@@ -13,16 +13,16 @@ class CustomUserManagerView:
                 return HttpResponse('User Created', status=201)
         return render(request, 'register.html', {'form': form})
 
-def create_superuser(self, request):
-        if request.method == 'POST':
-            form = CustomUserCreationForm(request.POST)
-            if form.is_valid():
-                user = form.save(commit=False)
-                user.is_staff = True
-                user.is_superuser = True
-                user.save()
-                return HttpResponse('Superuser Created', status=201)
-        return render(request, 'register.html', {'form': form})
+    def create_superuser(self, request):
+            if request.method == 'POST':
+                form = CustomUserCreationForm(request.POST)
+                if form.is_valid():
+                    user = form.save(commit=False)
+                    user.is_staff = True
+                    user.is_superuser = True
+                    user.save()
+                    return HttpResponse('Superuser Created', status=201)
+            return render(request, 'register.html', {'form': form})
 class CustomUserManagerView:
     def change_user(self, request, pk):
         user = CustomUser.objects.get(pk=pk)
